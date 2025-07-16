@@ -9,7 +9,7 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-void ProcessRecvPacket();
+int ProcessRecvPacket(SOCKET ClientSocket, char* Buffer);
 
 int main()
 {
@@ -82,8 +82,10 @@ int main()
 				else
 				{
 					//recv
-					int RecvBytes = RecvPacket(ReadSockets.fd_array[i]);
+					char Buffer[1024] = { 0, };
+					int RecvBytes = RecvPacket(ReadSockets.fd_array[i], Buffer);
 
+					
 					if (RecvBytes <= 0)
 					{
 						closesocket(ReadSockets.fd_array[i]);
@@ -92,15 +94,14 @@ int main()
 					}
 					else
 					{
-						flatbuffers::FlatBufferBuilder Builder(1024);
-						UserEvents::GetEventData();
-						for (int i = 0; i < ReadSockets.fd_count; ++i)
-						{
-							if (ReadSockets.fd_array[i] != ListenSocket)
-							{
-								SendPacket(ReadSockets.fd_array[i], Builder);
-							}
-						}
+						//for (int j = 0; j < (int) ReadSockets.fd_count; ++j)
+						//{
+						//	//send : test echo server
+						//	if (ReadSockets.fd_array[j] != ListenSocket)
+						//	{
+						//		SendPacket(ReadSockets.fd_array[j], Buffer);
+						//	}
+						//}
 						
 					}
 				}
@@ -118,4 +119,15 @@ int main()
 	WSACleanup();
 
 	return 0;
+}
+
+int ProcessRecvPacket(SOCKET ClientSocket, char* Buffer)
+{
+	flatbuffers::FlatBufferBuilder Builder(1024);
+	
+	const UserEvents::EventData* RecvEventData = UserEvents::GetEventData(Buffer);
+
+	int RecvBytes = RecvPacket(ClientSocket, Buffer);
+
+	return RecvBytes;
 }
