@@ -1,0 +1,49 @@
+namespace UserEvents;
+
+
+table C2S_Signup {
+	user_id : string;
+	password : string;
+	user_name : string;
+}
+
+table S2C_Signup {
+	success : bool;
+	message : string;
+}
+
+table C2S_Login {
+	user_name : string;
+	password : string;
+}
+
+table S2C_Login {
+	player_id : uint64;
+	user_name : string;
+	success : bool;
+}
+
+table C2S_Logout {
+	player_id : uint64;
+}
+
+table S2C_Logout {
+	player_id : uint64;
+	success : bool;
+}
+
+union EventType {
+	C2S_Signup,
+	S2C_Signup,
+	C2S_Login,
+	S2C_Login,
+	C2S_Logout,
+	S2C_Logout
+}
+
+table EventData {
+	timestamp: uint64;
+	data: EventType;
+}
+
+root_type EventData;
