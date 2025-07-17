@@ -2,22 +2,17 @@
 
 
 #include "TitlePC.h"
+#include "Kismet/GameplayStatics.h"
 
 ATitlePC::ATitlePC()
 {
-}
+	bShowMouseCursor = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
+	bEnableTouchEvents = true;
+	bEnableTouchOverEvents = true;
 
-void ATitlePC::Signup(FText UserId, FText Password, FName NickName)
-{
+	FInputModeUIOnly InputModeUIOnly;
 
-}
-
-void ATitlePC::Login(FText UserId, FText Password)
-{
-
-}
-
-void ATitlePC::Logout()
-{
-
+	SetInputMode(InputModeUIOnly);
 }

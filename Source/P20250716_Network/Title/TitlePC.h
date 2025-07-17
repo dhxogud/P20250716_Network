@@ -15,7 +15,4 @@ class P20250716_NETWORK_API ATitlePC : public APlayerController
 	GENERATED_BODY()
 public:
 	ATitlePC();
-	void Signup(FText UserId, FText Password, FName NickName);
-	void Login(FText UserId, FText Password);
-	void Logout();
 };
