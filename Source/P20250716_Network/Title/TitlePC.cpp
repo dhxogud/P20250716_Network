@@ -3,6 +3,7 @@
 
 #include "TitlePC.h"
 #include "Kismet/GameplayStatics.h"
+#include "../TCPClientSubsystem.h"
 
 ATitlePC::ATitlePC()
 {
@@ -11,8 +12,15 @@ ATitlePC::ATitlePC()
 	bEnableMouseOverEvents = true;
 	bEnableTouchEvents = true;
 	bEnableTouchOverEvents = true;
+}
 
-	FInputModeUIOnly InputModeUIOnly;
+bool ATitlePC::Login(FText UserId, FText Password)
+{
+	UTCPClientSubsystem* TCPClientSubsystem = (UGameplayStatics::GetGameInstance(GetWorld()))->GetSubsystem<UTCPClientSubsystem>();
+	if (!TCPClientSubsystem)
+	{
+		return false;
+	}
 
-	SetInputMode(InputModeUIOnly);
+	return false;
 }

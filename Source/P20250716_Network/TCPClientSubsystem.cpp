@@ -2,52 +2,50 @@
 
 
 #include "TCPClientSubsystem.h"
+
+#include "Engine/Engine.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sockets.h"
 #include "SocketSubsystem.h"
-#include "TimerManager.h"
+
 
 UTCPClientSubsystem::UTCPClientSubsystem()
 {
-	ClientSocket = nullptr;
-	SocketSubsystem = nullptr;
-	bIsConnected = false;
-	ServerIP = { 0, };
-	ServerPort = 0;
+    ClientSocket = nullptr;
+    SocketSubsystem = nullptr;
+    ServerPort = 0;
+    bIsConnected = false;
 }
 
 void UTCPClientSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::Initialize(Collection);
+    Super::Initialize(Collection);
 
-	SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
+    SocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
 
-	if (!SocketSubsystem)
-	{
-		LogMessage(TEXT("Failed to get socket subsystem"));
-		return;
-	}
+    if (!SocketSubsystem)
+    {
+        LogMessage("Failed to get socket subsystem");
+        return;
+    }
 
-	LogMessage(TEXT("Echo Client Subsystem initialized"));
-
-	if (UWorld* World = GetWorld())
-	{
-		World->GetTimerManager().SetTimer(TickTimerHandle, this, &UTCPClientSubsystem::OnTick, 0.1f, true);
-	}
-
+    //(UGameplayStatics::GetWorld())->GetTimerManager()->
+    
 }
 
 void UTCPClientSubsystem::Deinitialize()
 {
-	//delete ClientSocket;
-	//delete SocketSubsystem;
-	
-	Super::Deinitialize();
-
-
+    Super::Deinitialize();
 }
 
 bool UTCPClientSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 {
-	return true;
+    return true;
+}
+
+bool UTCPClientSubsystem::ConectToServer(const FString& InServerAddress, int32 InPort)
+{
+    return false;
 }
 
 void UTCPClientSubsystem::OnTick()
@@ -55,66 +53,13 @@ void UTCPClientSubsystem::OnTick()
 
 }
 
-bool UTCPClientSubsystem::ConnectToServer(const FString& ServerAddress, int32 Port)
-{
-	if (bIsConnected)
-	{
-		LogMessage(TEXT("Already connected to server"));
-		return false;
-	}
-
-	if (!SocketSubsystem)
-	{
-		LogMessage(TEXT("Socket subsystem not available"));
-		return false;
-	}
-
-	return false;
-}
-
-void UTCPClientSubsystem::SendMessageToServer(const FString& Message)
-{
-
-}
-
-void UTCPClientSubsystem::DisconnectFromServer()
-{
-}
-
-bool UTCPClientSubsystem::IsConnected() const
-{
-	return false;
-}
-
-FString UTCPClientSubsystem::GetServerInfo() const
-{
-	return FString();
-}
-
-void UTCPClientSubsystem::CheckForMessages()
-{
-}
-
-void UTCPClientSubsystem::ReceiveMessages()
-{
-}
-
-void UTCPClientSubsystem::ProcessReceivedMessage(const FString& Message)
-{
-}
-
-void UTCPClientSubsystem::NotifyConnectionStatusChanged(bool bNewConnectionStatus)
-{
-}
-
 void UTCPClientSubsystem::LogMessage(const FString& Message)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Message);
+    UE_LOG(LogTemp, Warning, TEXT("EchoClientSubsystem: %s"), *Message);
+
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+            FString::Printf(TEXT("EchoClientSubsystem: %s"), *Message));
+    }
 }
-
-void UTCPClientSubsystem::CleanupSocket()
-{
-
-}
-
-

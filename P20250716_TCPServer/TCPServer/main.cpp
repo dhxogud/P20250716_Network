@@ -82,9 +82,8 @@ int main()
 				else
 				{
 					//recv
-					char Buffer[1024] = { 0, };
+					char Buffer[4096] = { 0, };
 					int RecvBytes = RecvPacket(ReadSockets.fd_array[i], Buffer);
-
 					
 					if (RecvBytes <= 0)
 					{
@@ -94,14 +93,14 @@ int main()
 					}
 					else
 					{
-						//for (int j = 0; j < (int) ReadSockets.fd_count; ++j)
-						//{
-						//	//send : test echo server
-						//	if (ReadSockets.fd_array[j] != ListenSocket)
-						//	{
-						//		SendPacket(ReadSockets.fd_array[j], Buffer);
-						//	}
-						//}
+						for (int j = 0; j < (int) ReadSockets.fd_count; ++j)
+						{
+							//send : test echo server
+							if (ReadSockets.fd_array[j] != ListenSocket)
+							{
+								SendPacket(ReadSockets.fd_array[j], Buffer);
+							}
+						}
 						
 					}
 				}
@@ -109,7 +108,7 @@ int main()
 		}
 		else
 		{
-			std::cout << "Server Stand By" << std::endl;
+			//std::cout << "Server Stand By" << std::endl;
 		}
 	}
 
